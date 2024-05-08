@@ -19,24 +19,25 @@
   </el-form-item>
 </template>
 <script>
-import { computed } from 'vue';
+import { computed } from 'vue'
 export default {
   name: 'news-detail',
-  data() {
+  setup() {
     return {
       title: '',
       detail: {},
       content: ''
-    };
+    }
   },
   mounted() {
-    window._h = this;
-    const my = this.$commonStore();
+    // window._h = this
+    console.log('🚀 ~ mounted ~ this:', this)
+    // const my = this.$commonStore()
     // _h._my = my;
     // const name = computed(() => my.name)
-    console.log('name:', my.getUsername, my.username);
-    this.name = my.getUsername;
-    this.$http.get('/api/demo/news_details?id=20&status=1').then(r => (this.detail = r.data));
+    // console.log('name:', my.getUsername, my.username)
+    // this.name = my.getUsername
+    // this.$http.get('/demo/news_details?id=20&status=1').then(r => (this.detail = r.data))
   },
   methods: {
     toNews() {
@@ -44,17 +45,17 @@ export default {
         label: '新闻列表',
         name: 'news',
         path: '/news'
-      });
+      })
     },
     comment() {
-      this.$http.post(`/api/demo/news_comment?content=${this.content}&id=${this.detail.id}`).then(r => console.log(r));
+      this.$http.post(`/demo/news_comment?content=${this.content}&id=${this.detail.id}`).then(r => console.log(r))
     },
     delConmment() {
-      let id = this.detail.id;
-      this.$http.delete(`/api/demo/delete_comment`, { data: { id, comment_id: '98' } }).then(r => console.log(r));
+      let id = this.detail.id
+      this.$http.delete(`/demo/delete_comment`, { data: { id, comment_id: '98' } }).then(r => console.log(r))
     }
   }
-};
+}
 </script>
 <style scoped>
 .b {

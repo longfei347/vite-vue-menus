@@ -4,8 +4,8 @@
       <div class="head">
         <img class="logo" src="https://s.weituibao.com/1582958061265/mlogo.png" />
         <div class="name">
-          <div class="title">新蜂商城</div>
-          <div class="tips">Vue3.0 后台管理系统</div>
+          <div class="title">KILO</div>
+          <div class="tips">kilo安全管理平台</div>
         </div>
       </div>
       <el-form label-position="top" :rules="rules" :model="ruleForm" ref="loginForm" class="login-form">
@@ -17,8 +17,9 @@
         </el-form-item>
         <el-form-item>
           <div style="color: #333">登录表示您已同意<a>《服务条款》</a></div>
-          <el-button style="width: 100%" type="primary" @click="submitForm">立即登录</el-button>
-          <el-checkbox v-model="checked" @change="!checked">下次自动登录</el-checkbox>
+          <el-button style="width: 100%" type="primary" @click="submitForm">立即{{ type === 'login' ? '登录' : '注册' }}</el-button>
+          <!-- <el-button plain @click="resetForm">重置</el-button> -->
+          <el-button plain type="text" @click="type = type === 'login' ? 'register' : 'login'">{{ type === 'login' ? '注册' : '登录' }}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -26,65 +27,78 @@
 </template>
 
 <script>
-import axios from '@/utils/axios';
-import md5 from 'js-md5';
-import { reactive, ref, toRefs } from 'vue';
-import { commonStore } from '@/store';
+import axios from '@/utils/axios'
+// import md5 from 'js-md5'
+import { reactive, ref, toRefs } from 'vue'
+import { commonStore } from '@/store'
+import { ElMessage } from 'element-plus'
 export default {
   name: 'Login',
   setup() {
-    const loginForm = ref(null);
+    const loginForm = ref(null)
     const state = reactive({
+      type: 'login',
       ruleForm: {
         username: '',
         password: ''
       },
-      checked: true,
       rules: {
         username: [
           {
             required: 'true',
             message: '账户不能为空',
             trigger: 'blur',
-            defaule: '13043403780'
+            defaule: 'longfei'
           }
         ],
         password: [{ required: 'true', message: '密码不能为空', trigger: 'blur' }]
       }
-    });
+    })
     const submitForm = async () => {
       loginForm.value.validate(valid => {
         if (valid) {
           axios
-            .post('/api/demo/login', {
-              mobile: state.ruleForm.username || '',
-              ver_code: state.ruleForm.password,
-              passwordMd5: md5(state.ruleForm.password)
+            .post(state.type === 'login' ? '/login' : '/user', {
+              username: state.ruleForm.username || '',
+              password: state.ruleForm.password
+              // passwordMd5: md5(state.ruleForm.password)
             })
             .then(res => {
-              // console.log('res', res);
-              sessionStorage.setItem('token', res.data.token);
-              commonStore().setToken(res.data.token);
-              // this.$router.push('/home');
-              window.location.href = '/';
-            });
+              if (state.type === 'login') {
+                ElMessage.success('登陆成功')
+                sessionStorage.setItem('token', res.data.token)
+                commonStore().setToken(res.data.token)
+                commonStore().setUsername(state.ruleForm.username)
+                // console.log('🚀 ~ submitForm ~ res.data:', res.data)
+                // this.$router.push('/home');
+                window.location.href = '/'
+              } else {
+                if (res.code === 200) {
+                  ElMessage.success('注册成功')
+                  window.location.href = '/login'
+                } else {
+                  ElMessage.error(res.msg)
+                }
+              }
+            })
         } else {
-          console.log('error submit!!');
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
-    };
+      })
+    }
     const resetForm = () => {
-      loginForm.value.resetFields();
-    };
+      loginForm.value.resetFields()
+    }
     return {
       ...toRefs(state),
       loginForm,
       submitForm,
       resetForm
-    };
+    }
   }
-};
+  // methods: { }
+}
 </script>
 
 <style scoped>

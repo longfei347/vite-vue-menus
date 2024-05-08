@@ -77,8 +77,8 @@
 </template>
 
 <script>
-import { HomeFilled, List, Reading, Document, Menu, Location, Setting, Expand, Fold } from '@element-plus/icons-vue';
-import { commonStore } from '@/store';
+import { HomeFilled, List, Reading, Document, Menu, Location, Setting, Expand, Fold } from '@element-plus/icons-vue'
+import { commonStore } from '@/store'
 export default {
   name: 'side',
   components: {
@@ -115,13 +115,25 @@ export default {
           path: '/news-detail'
         },
         {
+          name: 'kilo',
+          label: '摄像头列表',
+          icon: 'Reading',
+          path: '/kilo'
+        },
+        {
+          name: 'user',
+          label: '用户列表',
+          icon: 'Reading',
+          path: '/user'
+        },
+        {
           name: 'prod',
           label: '产品',
           children: [
             {
-              name: 'about',
-              label: '关于',
-              path: '/about'
+              name: 'todo',
+              label: '待办',
+              path: '/todo'
             },
             {
               name: 'demo',
@@ -136,7 +148,7 @@ export default {
           ]
         }
       ]
-    };
+    }
   },
   methods: {
     handleOpen(key, keyPath) {
@@ -146,20 +158,20 @@ export default {
       // console.log(key, keyPath)
     },
     doFold() {
-      this.isCollapse = !this.isCollapse;
+      this.isCollapse = !this.isCollapse
     },
     clickTab(tab) {
-      console.log('tab:', tab);
-      let store = commonStore();
-      let tabs = store.getTabs;
+      console.log('tab:', tab)
+      let store = commonStore()
+      let tabs = store.getTabs
       if (!tabs.find(itm => itm.path === tab.path)) {
-        tabs.push(tab);
-        store.setTabs(tabs);
+        tabs.push(tab)
+        store.setTabs(tabs)
       }
-      store.setCurrentTab(tab.path);
+      store.setCurrentTab(tab.path)
     }
   }
-};
+}
 </script>
 <style lang="less" scoped>
 .el-menu {
