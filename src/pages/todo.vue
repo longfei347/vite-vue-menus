@@ -70,6 +70,9 @@ import { ref, reactive, onMounted } from 'vue'
 import request from '@/utils/axios'
 
 export default {
+  name: 'todo',
+  label: '待办列表',
+  icon: 'Document',
   setup() {
     // 查询
     const formData = reactive({
@@ -199,9 +202,6 @@ export default {
   }
   .todo {
     color: orange;
-  }
-  .el-pagination {
-    margin-top: 12px;
   }
 }
 </style>

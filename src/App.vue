@@ -29,7 +29,7 @@
 <script>
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 import { commonStore } from './store'
-import side from './components/side.vue'
+import side from '@/components/side.vue'
 import { UserFilled } from '@element-plus/icons-vue'
 export default {
   name: 'app',
@@ -39,49 +39,21 @@ export default {
   },
   data() {
     return {
+      store: commonStore(),
       username: commonStore().getUsername
     }
   },
   mounted() {
     window._a = this
-    const common = commonStore()
-    // console.log('🚀 ~ mounted ~ common:', common)
-    // 5种方式修改值
-    // 1 common.username=xx
-    // 2 this.$patch({'username', 'xx'})
-    // 3 this.$patch(state => {state.username = 'xx'})
-    // 4 this.$state ={username: 'xx',age:'18'}
-    // 5 common.setUsername('xx') // actions异步函数
-    // 6 common.$reset()
-    // common.$subscribe((mutation, state) => {
-    //   console.log('mutation:', mutation)
-    //   console.log('state:', state)
-    // })
-    // common.$onAction(({name,store,args,after,onError}) => {
-    //   console.log('name:', name)
-    //   console.log('store:', store)
-    //   console.log('args:', args)
-    //   console.log('after:', after)
-    //   console.log('onError:', onError)
-    //
-    // }
-    // 懒加载方法
-    /* const observer=new IntersectionObserver((entries)=>{
-      if (entries[0].intersectionRatio > 0) {
-        el.src=bingding.modelValue
-        observer.unobserve(el)
-      }
-    })
-    observer.observe(el) */
   },
   methods: {
     removeTab(val) {
-      // console.log('val:', val);
       let ind = this.tabs.findIndex(itm => itm.path === val)
       let next = this.tabs[ind + 1] || this.tabs[ind - 1]
       this.tabs.splice(ind, 1)
       if (next) {
         this.currentTabs = next.path
+        this.$router.push(next.path)
       }
     },
     openTab(tab) {
@@ -90,7 +62,7 @@ export default {
         this.tabs.push(tab)
       }
       this.currentTabs = tab.path
-      this.$router.push(tab.path)
+      this.$route.path !== tab.path && this.$router.push(tab.path)
     },
     clickTab(v) {
       this.$router.push(v.paneName)
@@ -103,8 +75,22 @@ export default {
     }
   },
   watch: {
-    token(token) {
-      // console.log('token:', token);
+    // 可不用
+    $route: {
+      handler(val) {
+        if (this.store.currentTab !== val.path) {
+          let cur = this.store.menu.find(itm => itm.path === val.path)
+          // console.log('🚀 ~ handler ~ cur:', cur)
+          cur && this.openTab(cur)
+        }
+      },
+      immediate: true
+    }
+  },
+  provide() {
+    return {
+      removeTab: this.removeTab,
+      openTab: this.openTab
     }
   },
   computed: {
@@ -131,23 +117,41 @@ export default {
 }
 </script>
 <style lang="less">
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+.el-tabs__item {
+  padding: 0 20px;
+}
+.el-tabs__nav-wrap::after {
+  height: 1px;
+}
+.el-tabs__item.is-active {
+  color: #409eff;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  height: 100%;
 }
 .main {
   display: flex;
   position: relative;
-  .el-container {
-    padding: 0 10px;
+  height: 100%;
+  > .el-container {
+    padding: 10px;
   }
   .userInfo {
     position: absolute;
     right: 20px;
-    top: 5px;
+    top: 22px;
     .el-dropdown-link {
       display: flex;
       align-items: center;
@@ -157,6 +161,9 @@ export default {
       }
     }
   }
+}
+.el-pagination {
+  margin-top: 10px;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;

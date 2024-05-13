@@ -32,6 +32,7 @@ import axios from '@/utils/axios'
 import { reactive, ref, toRefs } from 'vue'
 import { commonStore } from '@/store'
 import { ElMessage } from 'element-plus'
+import { router } from '@/router'
 export default {
   name: 'Login',
   setup() {
@@ -64,14 +65,26 @@ export default {
               // passwordMd5: md5(state.ruleForm.password)
             })
             .then(res => {
+              console.log('🚀 ~ submitForm ~ res:', res)
               if (state.type === 'login') {
-                ElMessage.success('登陆成功')
-                sessionStorage.setItem('token', res.data.token)
-                commonStore().setToken(res.data.token)
-                commonStore().setUsername(state.ruleForm.username)
-                // console.log('🚀 ~ submitForm ~ res.data:', res.data)
-                // this.$router.push('/home');
-                window.location.href = '/'
+                if (res.code === 200) {
+                  ElMessage.success('登陆成功')
+                  sessionStorage.setItem('token', res.data.token)
+                  commonStore().setToken(res.data.token)
+                  commonStore().setUsername(state.ruleForm.username)
+                  // console.log('🚀 ~ submitForm ~ res.data:', res.data)
+                  router.push('/home')
+                  // 设置定时器2小时重新登陆
+                  setTimeout(() => {
+                    ElMessage.warning('token 过期, 请请重新登录')
+                    commonStore().setToken('')
+                    commonStore().setUsername('')
+                    sessionStorage.removeItem('token')
+                    setTimeout(() => router.push('/login'), 1000)
+                  }, 2 * 60 * 60 * 1000)
+                } else {
+                  ElMessage.error(res.msg || '登陆失败, 请检查网络状态')
+                }
               } else {
                 if (res.code === 200) {
                   ElMessage.success('注册成功')

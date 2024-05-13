@@ -18,12 +18,14 @@ const modules = import.meta.glob('./pages/**/*.vue', { eager: true, import: 'def
 } */
 Object.keys(modules).forEach(key => {
   const routePath = key.replace(/(.*\/)*([^.]+).*/gi, '$2')
-  // console.log('route:', routePath);
+  // console.log('route:', routePath, modules[key])
   routes.push({
     path: '/' + routePath,
     name: routePath,
     title: routePath,
-    component: modules[key] //.vue不能省略
+    label: modules[key].label, // 菜单标题
+    icon: modules[key].icon, // 菜单图标
+    component: modules[key]
   })
 })
 

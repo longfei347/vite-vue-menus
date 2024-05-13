@@ -8,6 +8,7 @@ export const commonStore = defineStore({
     return {
       username: '张三',
       tabs: [],
+      menu: [],
       currentTab: '',
       token: ''
     }
@@ -17,18 +18,16 @@ export const commonStore = defineStore({
     getUsername: state => state.username,
     getTabs: state => state.tabs,
     getToken: state => state.token,
+    getMenu: state => state.menu,
     getCurrentTab: state => state.currentTab
   },
   // methods可以同步,异步,提交state
   actions: {
-    async setUser(name) {
-      const result = await fetch('/user/setUser', {
-        method: 'POST'
-      })
-      this.setUsername(result.data)
-    },
     setUsername(name) {
       this.username = name
+    },
+    setMenu(menu) {
+      this.menu = menu
     },
     setTabs(tabs) {
       this.tabs = tabs

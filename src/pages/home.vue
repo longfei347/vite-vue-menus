@@ -1,59 +1,44 @@
 <template>
-  <h3>我的主页:{{ name }}</h3>
-  <!-- <router-link :to="{ path: 'news' }">新闻列表</router-link> -->
-  <el-button @click="toNews">新闻列表</el-button>
+  <h1>欢迎来到安全管理平台主页</h1>
+  <h3>欢迎您:{{ name }}</h3>
+  <router-link :to="{ path: '/todo' }">待办列表</router-link>
+  <el-button @click="toNews">摄像头列表</el-button>
   <div class="detail">
-    <p>
-      {{ detail.title }} <span class="b">作者: {{ detail.author }}</span>
-    </p>
-    <p>{{ detail.content }}</p>
+    <p>{{ content }}</p>
   </div>
-  <!-- <el-form-item>
-    <textarea name="" id="" cols="30" rows="10" v-model="content"> </textarea>
-    <p>
-      <button @click="comment">评价</button>
-    </p>
-  </el-form-item>
-  <el-form-item>
-    <el-button @click="delConmment">删除评价</el-button>
-  </el-form-item> -->
 </template>
 <script>
 import { computed } from 'vue'
 export default {
   name: 'home',
+  label: '主页',
+  icon: 'HomeFilled',
   data() {
     return {
       name: '',
-      detail: {},
       content: ''
     }
   },
+  inject: ['openTab'],
   mounted() {
     window._h = this
-    // const my = this.$commonStore();
+    const my = this.$commonStore()
     // // const name = computed(() => my.name)
-    // this.name = my.getUsername;
-    this.$http.get('/user').then(r => (this.detail = r.data))
+    this.name = my.getUsername
+    // this.$http.get('/user').then(r => (this.detail = r.data))
   },
   methods: {
     toNews() {
-      this.$emit('openTab', {
+      this.openTab({
+        label: '摄像头列表',
+        name: 'kilo',
+        path: '/kilo'
+      }) // 两种都行
+      /* this.$emit('openTab', {
         label: '新闻列表',
-        name: 'news',
-        path: '/news'
-      })
-    },
-    comment() {
-      this.$http.post(`/demo/news_comment?content=${this.content}&id=${this.detail.id}`).then(r => console.log(r))
-    },
-    delConmment() {
-      let id = this.detail.id
-      this.$http
-        .delete(`/demo/delete_comment`, {
-          data: { id, comment_id: '98' }
-        })
-        .then(r => console.log(r))
+        name: 'todo',
+        path: '/todo'
+      }) */
     }
   }
 }

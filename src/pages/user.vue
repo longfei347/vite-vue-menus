@@ -50,6 +50,9 @@ import { ref, reactive, onMounted } from 'vue'
 import request from '@/utils/axios'
 
 export default {
+  label: '用户管理',
+  icon: 'Setting',
+  name: 'User',
   setup() {
     // 分页数据
     const page = reactive({
