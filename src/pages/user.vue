@@ -161,6 +161,9 @@ export default {
       currentItem,
       handleSubmit
     }
+  },
+  mounted() {
+    window._u = this
   }
 }
 </script>

@@ -99,9 +99,9 @@ export default {
 
     // 获取列表数据
     const fetchList = async (pageNo = 1, opt) => {
-      const response = await request.get(`/todo/curd?page=${pageNo}&pageSize=${page.pageSize}`, { params: opt })
+      const response = await request.get(`/todo?page=${pageNo}&pageSize=${page.pageSize}`, { params: opt })
       if (response.code === 200) {
-        const { total, list: data } = response.data
+        const { total, data } = response
         listData.value = data
         page.total = total
       } else {
@@ -138,7 +138,7 @@ export default {
     // 删除项
     const handleDelete = async item => {
       try {
-        let res = await request.delete(`/todo/curd`, { data: { id: item.id } })
+        let res = await request.delete(`/todo`, { data: { id: item.id } })
         if (res.code === 200) {
           ElMessage.success('删除成功')
           fetchList(page.current)
@@ -155,7 +155,7 @@ export default {
       try {
         const method = currentItem.id ? 'PUT' : 'POST'
         let res = await request({
-          url: '/todo/curd',
+          url: '/todo',
           method,
           data: currentItem
         })

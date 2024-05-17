@@ -1,32 +1,48 @@
 <template>
   <div class="kilo">
-    <el-form :model="form" inline ref="kiloForm">
-      <el-form-item label="电房编码" prop="room_num">
-        <el-input v-model="form.room_num"></el-input>
+    <el-form :model="form" inline ref="kiloForm" label-width="90px" class="cameraForm">
+      <el-form-item label="电房编号" prop="roomNum">
+        <el-input v-model="form.roomNum"></el-input>
       </el-form-item>
-      <el-form-item label="电房名称" prop="room_name">
-        <el-input v-model="form.room_name"></el-input>
+      <el-form-item label="电房名称" prop="roomName">
+        <el-input v-model="form.roomName"></el-input>
       </el-form-item>
-      <el-form-item label="摄像头名称" prop="camera_name">
-        <el-input v-model="form.camera_name"></el-input>
+      <el-form-item label="摄像头名称" prop="cameraName">
+        <el-input v-model="form.cameraName"></el-input>
       </el-form-item>
-      <el-form-item label="NVR-IP" prop="nvr_ip">
-        <el-input v-model="form.nvr_ip"></el-input>
+      <el-form-item label="NVR-IP" prop="nvrIp">
+        <el-input v-model="form.nvrIp"></el-input>
       </el-form-item>
-      <el-form-item label="摄像头IP" prop="camera_ip">
-        <el-input v-model="form.camera_ip"></el-input>
+      <el-form-item label="摄像头IP" prop="cameraIp">
+        <el-input v-model="form.cameraIp"></el-input>
       </el-form-item>
-      <el-form-item label="摄像头MAC" prop="camera_mac">
-        <el-input v-model="form.camera_mac"></el-input>
+      <el-form-item label="摄像头MAC" prop="cameraMac">
+        <el-input v-model="form.cameraMac"></el-input>
       </el-form-item>
-      <el-form-item label="SN号" prop="sn_num">
-        <el-input v-model="form.sn_num"></el-input>
+      <el-form-item label="摄像头类型" prop="cameraType">
+        <el-select v-model="form.cameraType" class="w80" placeholder="摄像头类型" clearable>
+          <el-option :value="1" label="枪机"></el-option>
+          <el-option :value="2" label="球机"></el-option>
+          <el-option :value="3" label="半球"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="是否多通道" prop="channelType">
+        <el-select v-model="form.channelType" class="w80" placeholder="是否多通道" clearable>
+          <el-option :value="1" label="是"></el-option>
+          <el-option :value="0" label="否"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="是否鸿蒙" prop="isHarmony">
+        <el-select v-model="form.isHarmony" class="w80" placeholder="是否鸿蒙" clearable>
+          <el-option :value="1" label="是"></el-option>
+          <el-option :value="0" label="否"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="SN号" prop="snNum">
+        <el-input v-model="form.snNum"></el-input>
       </el-form-item>
       <el-form-item label="厂商" prop="manufacturer">
         <el-input v-model="form.manufacturer"></el-input>
-      </el-form-item>
-      <el-form-item label="摄像头类型" prop="camera_type">
-        <el-input v-model="form.camera_type"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="handleSearch">查询</el-button>
@@ -40,13 +56,18 @@
     </el-form>
     <!-- 上面对象为列表数据，下面对象为表单数据 -->
     <el-table :data="listData" style="width: 100%" border>
-      <el-table-column v-for="col in columns" :key="col.key" :prop="col.key" :label="col.title" :width="col.width" :fixed="col.fixed">
+      <el-table-column v-for="col in columns" :key="col.key" :prop="col.key" :label="col.title" :width="col.width" :fixed="col.fixed" show-overflow-tooltip="true">
         <template #default="{ row, column }">
           <template v-if="currentEditableRow === row.id">
-            <el-input v-model="row[column.property]" :disabled="col.editable === false"></el-input>
+            <template v-if="col.isSelect">
+              <el-select v-model="row[column.property]" :disabled="col.editable === false" placeholder="请选择">
+                <el-option v-for="itm in col.options" :value="itm.value" :label="itm.label"></el-option>
+              </el-select>
+            </template>
+            <el-input v-else v-model="row[column.property]" :disabled="col.editable === false"></el-input>
           </template>
           <template v-else>
-            {{ row[column.property] }}
+            {{ col.isSelect ? col.options.find(im => im.value === row[column.property])?.label : row[column.property] }}
           </template>
         </template>
       </el-table-column>
@@ -56,7 +77,7 @@
         </template>
         <template #default="{ row }">
           <el-button type="primary" plain size="small" v-if="currentEditableRow !== row.id" @click="handleEdit(row)">编辑</el-button>
-          <el-button type="info" plain size="small" v-if="currentEditableRow === row.id && actionType" @click="canncelEdit(row)">取消</el-button>
+          <el-button type="info" plain size="small" v-if="currentEditableRow === row.id && actionType" @click="handleCanncel(row)">取消</el-button>
           <el-button type="primary" plain size="small" v-if="currentEditableRow === row.id && actionType" @click="handleSubmit(row)">保存</el-button>
           <el-button type="danger" plain size="small" @click="handleDelete(row)">删除</el-button>
         </template>
@@ -83,7 +104,7 @@ import request from '@/utils/axios'
 import { ElMessage } from 'element-plus'
 
 export default {
-  name: 'kilo',
+  name: 'camera',
   label: '摄像头列表',
   icon: 'List',
   setup() {
@@ -96,15 +117,16 @@ export default {
     })
     // 查询表单form
     const form = reactive({
-      room_num: '',
-      room_name: '',
-      camera_name: '',
-      nvr_ip: '',
-      camera_ip: '',
-      camera_mac: '',
-      sn_num: '',
-      manufacturer: '',
-      camera_type: ''
+      roomNum: '',
+      roomName: '',
+      cameraName: '',
+      nvrIp: '',
+      cameraIp: '',
+      cameraMac: '',
+      cameraType: '',
+      channelType: '',
+      snNum: '',
+      manufacturer: ''
     })
     // 查询
     const handleSearch = () => {
@@ -180,26 +202,42 @@ export default {
         camera_username: null,
         camera_pwd: '123123'
       }] */
-      const response = await request.get(`/kilo/cameras`, {
+      // 过滤form非空值
+      let curForm = Object.fromEntries(
+        Object.entries(form).filter(([key, value]) => {
+          // 这里可以添加更多检查，例如 `value.length === 0` 对于数组或 `{}.toString.call(value) === '[object Object]'` 对于对象
+          return value !== ''
+        })
+      )
+      const res = await request.get(`/kilo/camera/list`, {
         params: {
-          page: exports ? 1 : page.current,
+          pageNum: exports ? 1 : page.current,
           pageSize: exports ? 10000 : page.pageSize,
-          ...form
+          ...curForm
         }
       })
-      if (response.code === 200) {
-        let { total, list } = response.data
+      if (res.code === 200) {
+        let { total, list, rows } = res.data || res
+        list = list || rows
         list = list.map(itm => {
           return {
             ...itm,
-            update_time: itm.update_time && itm.update_time.slice(0, 19).replace('T', ' '),
-            create_time: itm.create_time && itm.create_time.slice(0, 19).replace('T', ' ')
+            // stationAuthType: ['MD5/SHA256', 'SHA256'][itm.stationAuthType],
+            // stationEnable: ['否', '是'][itm.stationEnable],
+            // stationProtocolVersion: { 0: 'T.28181-2011', 1: 'T.28181-2016', 2: 'T.28181-2022' }[itm.stationProtocolVersion],
+            // state: { 0: '初始状态', 1: '主站完成', 2: '鸿蒙完成', 3: '主站鸿蒙完成', 4: '已同步至nvr', 5: '名称已回流' }[itm.state],
+            // isHarmony: ['否', '是'][itm.isHarmony],
+            // channelType: ['否', '是'][itm.channelType],
+            // cameraType: ['', '枪机', '球机', '半球'][itm.cameraType],
+            updateTime: itm.updateTime && itm.updateTime.slice(0, 19).replace('T', ' '),
+            createTime: itm.createTime && itm.createTime.slice(0, 19).replace('T', ' ')
           }
         })
         if (exports) {
           return list
         }
-        listData.value = list
+        // console.log('🚀 ~ fetchList ~ list:', list)
+        listData.value = list || rows
         page.total = total
       } else {
         ElMessage.error('获取数据失败')
@@ -207,9 +245,21 @@ export default {
     }
     const currentEditableRow = ref('')
     // 编辑
+    let editRow = {}
     const handleEdit = row => {
       currentEditableRow.value = row.id
+      editRow = { ...row }
       actionType.value = 'edit'
+    }
+    // 取消
+    const handleCanncel = row => {
+      if (actionType.value === 'add') {
+        listData.value.pop()
+      } else {
+        Object.assign(row, editRow)
+      }
+      currentEditableRow.value = ''
+      actionType.value = ''
     }
 
     // 页码改变事件
@@ -274,10 +324,7 @@ export default {
       handleExport,
       currentEditableRow,
       handleEdit,
-      canncelEdit() {
-        currentEditableRow.value = ''
-        actionType.value = ''
-      },
+      handleCanncel,
       listData,
       page,
       handlePageChange,
@@ -302,6 +349,15 @@ export default {
 <style lang="less" scoped>
 .kilo {
   text-align: left;
+  .cameraForm {
+    .el-form-item {
+      margin-right: 10px;
+    }
+    .el-input,
+    .el-select {
+      width: 130px;
+    }
+  }
   :deep(.el-table) {
     .cell {
       padding: 0 2px;

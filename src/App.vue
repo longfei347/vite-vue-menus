@@ -1,6 +1,6 @@
 <template>
   <main class="main" v-if="token">
-    <side />
+    <side :theme="theme" />
     <el-container>
       <el-tabs type="card" @tab-remove="removeTab" @tab-click="clickTab" v-model="currentTabs" closable style="width: 100%">
         <el-tab-pane v-for="itm in tabs" :key="itm" :name="itm.path" :label="itm.label" :path="itm.path">
@@ -18,6 +18,16 @@
         </span>
         <template #dropdown>
           <el-dropdown-menu>
+            <el-dropdown-item>
+              切换主题
+              <el-radio-group v-model="theme" class="themes">
+                <el-radio label="primary">淡蓝</el-radio>
+                <el-radio label="success">绿色</el-radio>
+                <el-radio label="warning">橙色</el-radio>
+                <el-radio label="danger">红色</el-radio>
+                <el-radio label="purple">紫色</el-radio>
+              </el-radio-group>
+            </el-dropdown-item>
             <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -39,6 +49,7 @@ export default {
   },
   data() {
     return {
+      theme: 'purple',
       store: commonStore(),
       username: commonStore().getUsername
     }
@@ -152,6 +163,7 @@ body {
     position: absolute;
     right: 20px;
     top: 22px;
+
     .el-dropdown-link {
       display: flex;
       align-items: center;
@@ -168,5 +180,26 @@ body {
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
   min-height: 400px;
+}
+.themes {
+  width: 150px;
+  .el-radio {
+    margin-right: 0;
+    &:nth-child(1) {
+      background-color: var(--el-color-primary-light-3);
+    }
+    &:nth-child(2) {
+      background-color: var(--el-color-success-light-3);
+    }
+    &:nth-child(3) {
+      background-color: var(--el-color-warning-light-3);
+    }
+    &:nth-child(4) {
+      background-color: var(--el-color-danger-light-3);
+    }
+    &:nth-child(5) {
+      background-color: purple;
+    }
+  }
 }
 </style>

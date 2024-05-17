@@ -3,7 +3,13 @@
  */
 import { commonStore } from '@/store'
 let env = 'prod' //dev开发, test测试, prod生产
-let baseURL = import.meta.env.DEV ? '/api' : 'http://localhost:3000'
+let envs = {
+  dev: '/api',
+  test: 'http://localhost:9000', // 本地docker部署地址
+  prod: '/prod-api' // 远程地址
+}
+let baseURL = import.meta.env.DEV ? envs[env] : import.meta.env.VITE_API_URL
+// console.log('🚀 ~ import.meta.env:', import.meta.env)
 /*  if(env === 'dev') {
      baseURL = 'http://localhost:3003';
  } else if (env === 'test') {
