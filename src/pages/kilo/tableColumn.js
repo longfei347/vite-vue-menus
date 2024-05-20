@@ -3,12 +3,6 @@ export const columns = [
   { title: '电房编号', key: 'roomNum', width: 120 },
   { title: '电房名称', key: 'roomName', width: 120 },
   { title: '摄像头名称', key: 'cameraName', width: 120 },
-  { title: 'NVR-IP', key: 'nvrIp', width: 110 },
-  { title: '摄像头IP', key: 'cameraIp', width: 110 },
-  { title: '摄像头MAC', key: 'cameraMac', width: 140 },
-  { title: 'SN号', key: 'snNum', width: 100 },
-  { title: '厂商', key: 'manufacturer', width: 100 },
-  { title: '激活密码', key: 'activatePwd', width: 100 },
   {
     title: '摄像头类型',
     key: 'cameraType',
@@ -20,6 +14,13 @@ export const columns = [
       { value: 3, label: '半球' }
     ]
   },
+  { title: '摄像头IP', key: 'cameraIp', width: 110 },
+  { title: '摄像头MAC', key: 'cameraMac', width: 140 },
+  { title: 'SN号', key: 'snNum', width: 100 },
+  { title: '厂商', key: 'manufacturer', width: 100 },
+  { title: '网关设备IP', key: 'gatewayDevIp', width: 110 },
+  { title: '网关设备端口', key: 'gatewayDevPort', width: 100 },
+  { title: '激活密码', key: 'activatePwd', width: 100 },
   { title: '设备版本号', key: 'devVersion', width: 95 },
   {
     title: '是否多通道',
@@ -31,8 +32,9 @@ export const columns = [
     ],
     width: 100
   },
-  { title: '操作系统', key: 'harmonyAuth', width: 110 },
+  { title: 'NVR-IP', key: 'nvrIp', width: 110 },
   { title: 'NVR回调地址', key: 'nvrUrl', width: 120 },
+  { title: '操作系统', key: 'harmonyAuth', width: 110 },
   {
     title: '是否鸿蒙',
     key: 'isHarmony',
@@ -43,6 +45,10 @@ export const columns = [
     ],
     width: 90
   },
+  { title: '鸿蒙平台IP', key: 'harmonyPlatformIp', width: 150 },
+  { title: '鸿蒙平台端口', key: 'harmonyPlatformPort', width: 170 },
+  { title: '鸿蒙用户名', key: 'harmonyPlatformUsername', width: 150 },
+  { title: '鸿蒙密码', key: 'harmonyPlatformPwd', width: 180 },
   { title: '国标编码', key: 'gbCode', width: 170 },
   { title: '国标密码', key: 'gbPwd', width: 100 },
   { title: '视频平台编码', key: 'stationCode', width: 100 },
@@ -82,10 +88,7 @@ export const columns = [
     ],
     width: 110
   },
-  { title: '鸿蒙平台IP', key: 'harmonyPlatformIp', width: 150 },
-  { title: '鸿蒙平台端口', key: 'harmonyPlatformPort', width: 170 },
-  { title: '鸿蒙用户名', key: 'harmonyPlatformUsername', width: 150 },
-  { title: '鸿蒙密码', key: 'harmonyPlatformPwd', width: 180 },
+
   {
     title: '状态',
     key: 'state',

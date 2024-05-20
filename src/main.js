@@ -9,14 +9,12 @@ import 'element-plus/dist/index.css'
 // import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import { ElMessage } from 'element-plus'
 let app = createApp(App)
-// console.log('router:', router.getRoutes());
 // app.use(ElementPlus, {
 //   locale: zhCn
 // });
 app.use(router)
 app.use(store)
 routes.forEach(itm => {
-  // console.log('cmp:', itm.name, itm.component);
   itm.name && app.component(itm.name, itm.component)
 })
 

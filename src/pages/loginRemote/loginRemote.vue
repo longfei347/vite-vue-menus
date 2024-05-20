@@ -43,7 +43,6 @@ import JSEncrypt from './jsencrypt.min'
 export default {
   name: 'Login2',
   setup() {
-    console.log('🚀 ~ JSEncrypt:', JSEncrypt)
     const loginForm = ref(null)
     const state = reactive({
       type: 'login',
@@ -86,14 +85,12 @@ export default {
               code: state.ruleForm.code
             })
             .then(res => {
-              console.log('🚀 ~ submitForm ~ res:', res)
               if (state.type === 'login') {
                 if (res.code === 200) {
                   ElMessage.success('登陆成功')
                   sessionStorage.setItem('token', 'Bearer ' + res.data?.token)
                   commonStore().setToken('Bearer ' + res.data?.token)
                   commonStore().setUsername(state.ruleForm.username)
-                  // console.log('🚀 ~ submitForm ~ res.data:', res.data)
                   router.push('/home')
                   // 设置定时器2小时重新登陆
                   setTimeout(() => {
@@ -116,7 +113,6 @@ export default {
               }
             })
         } else {
-          console.log('error submit!!')
           return false
         }
       })

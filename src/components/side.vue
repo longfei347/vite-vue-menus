@@ -82,17 +82,12 @@ export default {
     }
   },
   methods: {
-    handleOpen(key, keyPath) {
-      // console.log(key, keyPath);
-    },
-    handleClose(key, keyPath) {
-      // console.log(key, keyPath)
-    },
+    handleOpen(key, keyPath) {},
+    handleClose(key, keyPath) {},
     doFold() {
       this.isCollapse = !this.isCollapse
     },
     clickTab(tab) {
-      // console.log('tab:', tab)
       let store = commonStore()
       let tabs = store.getTabs
       if (!tabs.find(itm => itm.path === tab.path)) {
@@ -106,8 +101,10 @@ export default {
 </script>
 <style lang="less" scoped>
 .menu {
+  background-color: #545c64;
   .el-menu {
     border-right: 0;
+    background-color: #545c64;
     .el-menu-item:hover {
       background-color: rgba(255, 255, 255, 0.2);
     }
@@ -117,7 +114,7 @@ export default {
     align-items: center;
     padding-left: 12px;
     .logo {
-      width: 60px;
+      width: 50px;
       // background-color: rgba(255, 255, 255, 0.8);
       // background-color: #545c64;
     }
@@ -145,6 +142,12 @@ export default {
   background-color: var(--el-color-danger-light-3);
   .el-menu {
     background-color: var(--el-color-danger-light-3);
+  }
+}
+.menu.info {
+  background-color: var(--el-color-info-light-3);
+  .el-menu {
+    background-color: var(--el-color-info-light-3);
   }
 }
 .menu.purple {

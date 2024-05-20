@@ -51,7 +51,7 @@
         <el-button type="info" @click="handleReset">重置</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="handleExport">导出</el-button>
+        <el-button type="success" @click="handleExport">导出</el-button>
       </el-form-item>
     </el-form>
     <!-- 上面对象为列表数据，下面对象为表单数据 -->
@@ -92,6 +92,7 @@
       :page-size="page.pageSize"
       layout="total, sizes, prev, pager, next"
       :total="page.total"
+      locale="zh-cn"
     >
     </el-pagination>
   </div>
@@ -141,15 +142,26 @@ export default {
     // 导出
     const handleExport = () => {
       fetchList(1).then(data => {
+        if (data.length === 0) {
+          ElMessage.warning('没有数据导出')
+          return
+        }
+        let col = Object.keys(data[0]).map(itm => columns.find(item => item.key === itm)?.title)
         exportCsv(
-          columns.map(itm => itm.title),
-          data,
-          /* data.map(itm => {
+          col,
+          // data,
+          data.map(itm => {
             return {
               ...itm,
-              camera_type: itm.camera_type === 1 ? '枪机' : '球机'
+              stationAuthType: ['MD5/SHA256', 'SHA256'][itm.stationAuthType],
+              stationEnable: ['否', '是'][itm.stationEnable],
+              stationProtocolVersion: { 0: 'T.28181-2011', 1: 'T.28181-2016', 2: 'T.28181-2022' }[itm.stationProtocolVersion],
+              state: { 0: '初始状态', 1: '主站完成', 2: '鸿蒙完成', 3: '主站鸿蒙完成', 4: '已同步至nvr', 5: '名称已回流' }[itm.state],
+              isHarmony: ['否', '是'][itm.isHarmony],
+              channelType: ['否', '是'][itm.channelType],
+              cameraType: ['', '枪机', '球机', '半球'][itm.cameraType]
             }
-          }), */
+          }),
           '摄像头列表'
         )
       })
@@ -222,13 +234,6 @@ export default {
         list = list.map(itm => {
           return {
             ...itm,
-            // stationAuthType: ['MD5/SHA256', 'SHA256'][itm.stationAuthType],
-            // stationEnable: ['否', '是'][itm.stationEnable],
-            // stationProtocolVersion: { 0: 'T.28181-2011', 1: 'T.28181-2016', 2: 'T.28181-2022' }[itm.stationProtocolVersion],
-            // state: { 0: '初始状态', 1: '主站完成', 2: '鸿蒙完成', 3: '主站鸿蒙完成', 4: '已同步至nvr', 5: '名称已回流' }[itm.state],
-            // isHarmony: ['否', '是'][itm.isHarmony],
-            // channelType: ['否', '是'][itm.channelType],
-            // cameraType: ['', '枪机', '球机', '半球'][itm.cameraType],
             updateTime: itm.updateTime && itm.updateTime.slice(0, 19).replace('T', ' '),
             createTime: itm.createTime && itm.createTime.slice(0, 19).replace('T', ' ')
           }
@@ -236,7 +241,6 @@ export default {
         if (exports) {
           return list
         }
-        // console.log('🚀 ~ fetchList ~ list:', list)
         listData.value = list || rows
         page.total = total
       } else {

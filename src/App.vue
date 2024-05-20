@@ -1,46 +1,51 @@
 <template>
-  <main class="main" v-if="token">
-    <side :theme="theme" />
-    <el-container>
-      <el-tabs type="card" @tab-remove="removeTab" @tab-click="clickTab" v-model="currentTabs" closable style="width: 100%">
-        <el-tab-pane v-for="itm in tabs" :key="itm" :name="itm.path" :label="itm.label" :path="itm.path">
-          <component :is="itm.name" :path="itm.path" @openTab="openTab"></component>
-          <!-- <p>{{ itm.name }}</p> -->
-        </el-tab-pane>
-      </el-tabs>
-    </el-container>
-    <div class="userInfo">
-      <el-dropdown>
-        <span class="el-dropdown-link">
-          <!-- <el-avatar :size="40" :src="avatar" /> -->
-          <el-icon :size="16"><UserFilled /></el-icon>
-          <span>{{ username }}</span>
-        </span>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item>
-              切换主题
-              <el-radio-group v-model="theme" class="themes">
-                <el-radio label="primary">淡蓝</el-radio>
-                <el-radio label="success">绿色</el-radio>
-                <el-radio label="warning">橙色</el-radio>
-                <el-radio label="danger">红色</el-radio>
-                <el-radio label="purple">紫色</el-radio>
-              </el-radio-group>
-            </el-dropdown-item>
-            <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-    </div>
-  </main>
-  <router-view v-else></router-view>
+  <el-config-provider :locale="zh">
+    <main class="main" :class="theme" v-if="token">
+      <side :theme="theme" />
+      <el-container>
+        <el-tabs type="card" @tab-remove="removeTab" @tab-click="clickTab" v-model="currentTabs" closable style="width: 100%">
+          <el-tab-pane v-for="itm in tabs" :key="itm" :name="itm.path" :label="itm.label" :path="itm.path">
+            <component :is="itm.name" :path="itm.path" @openTab="openTab"></component>
+            <!-- <p>{{ itm.name }}</p> -->
+          </el-tab-pane>
+        </el-tabs>
+      </el-container>
+      <div class="userInfo">
+        <el-dropdown>
+          <span class="el-dropdown-link">
+            <!-- <el-avatar :size="40" :src="avatar" /> -->
+            <el-icon :size="16"><UserFilled /></el-icon>
+            <span>{{ username }}</span>
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>
+                切换主题
+                <el-radio-group v-model="theme" class="themes">
+                  <el-radio label="primary">淡蓝</el-radio>
+                  <el-radio label="success">绿色</el-radio>
+                  <el-radio label="warning">橙色</el-radio>
+                  <el-radio label="danger">红色</el-radio>
+                  <el-radio label="info">灰色</el-radio>
+                  <el-radio label="purple">紫色</el-radio>
+                  <el-radio label="">默认</el-radio>
+                </el-radio-group>
+              </el-dropdown-item>
+              <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
+    </main>
+    <router-view v-else></router-view>
+  </el-config-provider>
 </template>
 <script>
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 import { commonStore } from './store'
 import side from '@/components/side.vue'
 import { UserFilled } from '@element-plus/icons-vue'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 export default {
   name: 'app',
   components: {
@@ -48,14 +53,17 @@ export default {
     UserFilled
   },
   data() {
+    let store = commonStore()
     return {
-      theme: 'purple',
-      store: commonStore(),
-      username: commonStore().getUsername
+      store,
+      zh: zhCn,
+      theme: store.theme,
+      username: store.getUsername
     }
   },
   mounted() {
     window._a = this
+    // this.theme = this.store.theme
   },
   methods: {
     removeTab(val) {
@@ -68,7 +76,6 @@ export default {
       }
     },
     openTab(tab) {
-      // console.log('tab:', tab);
       if (!this.tabs.find(itm => itm.path === tab.path)) {
         this.tabs.push(tab)
       }
@@ -91,11 +98,13 @@ export default {
       handler(val) {
         if (this.store.currentTab !== val.path) {
           let cur = this.store.menu.find(itm => itm.path === val.path)
-          // console.log('🚀 ~ handler ~ cur:', cur)
           cur && this.openTab(cur)
         }
       },
       immediate: true
+    },
+    theme(n) {
+      this.store.setTheme(n)
     }
   },
   provide() {
@@ -134,15 +143,6 @@ body {
   padding: 0;
   height: 100%;
 }
-.el-tabs__item {
-  padding: 0 20px;
-}
-.el-tabs__nav-wrap::after {
-  height: 1px;
-}
-.el-tabs__item.is-active {
-  color: #409eff;
-}
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -156,14 +156,60 @@ body {
   display: flex;
   position: relative;
   height: 100%;
+  &.primary,
+  .el-table .el-table__inner-wrapper {
+    background-color: var(--el-color-primary-light-8);
+  }
+  &.success {
+    background-color: var(--el-color-success-light-8);
+  }
+  &.warning {
+    background-color: var(--el-color-warning-light-8);
+  }
+  &.danger {
+    background-color: var(--el-color-danger-light-8);
+  }
+  &.info {
+    background-color: var(--el-color-info-light-8);
+  }
+  &.purple {
+    background-color: #f2d6f2;
+  }
   > .el-container {
+    height: 100%;
     padding: 10px;
+    > .el-tabs {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      .el-tabs__header {
+        position: sticky;
+        top: 0;
+        border-color: #999;
+        .el-tabs__nav {
+          border-color: #999;
+        }
+        .el-tabs__item {
+          padding: 0 20px;
+          border-color: #999;
+        }
+        .el-tabs__nav-wrap::after {
+          height: 1px;
+        }
+        .el-tabs__item.is-active {
+          color: #409eff;
+        }
+      }
+      .el-tabs__content {
+        flex: 1;
+        overflow: auto;
+      }
+    }
   }
   .userInfo {
     position: absolute;
     right: 20px;
     top: 22px;
-
     .el-dropdown-link {
       display: flex;
       align-items: center;
@@ -176,10 +222,6 @@ body {
 }
 .el-pagination {
   margin-top: 10px;
-}
-.el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 200px;
-  min-height: 400px;
 }
 .themes {
   width: 150px;
@@ -198,6 +240,9 @@ body {
       background-color: var(--el-color-danger-light-3);
     }
     &:nth-child(5) {
+      background-color: var(--el-color-info-light-3);
+    }
+    &:nth-child(6) {
       background-color: purple;
     }
   }

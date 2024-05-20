@@ -65,14 +65,12 @@ export default {
               // passwordMd5: md5(state.ruleForm.password)
             })
             .then(res => {
-              console.log('🚀 ~ submitForm ~ res:', res)
               if (state.type === 'login') {
                 if (res.code === 200) {
                   ElMessage.success('登陆成功')
                   sessionStorage.setItem('token', res.data.token)
                   commonStore().setToken(res.data.token)
                   commonStore().setUsername(state.ruleForm.username)
-                  // console.log('🚀 ~ submitForm ~ res.data:', res.data)
                   router.push('/home')
                   // 设置定时器2小时重新登陆
                   setTimeout(() => {
@@ -95,7 +93,6 @@ export default {
               }
             })
         } else {
-          console.log('error submit!!')
           return false
         }
       })

@@ -2,14 +2,13 @@
  * 配置axios的拦截器
  */
 import { commonStore } from '@/store'
-let env = 'prod' //dev开发, test测试, prod生产
+let env = 'dev' //dev开发, test测试, prod生产
 let envs = {
   dev: '/api',
   test: 'http://localhost:9000', // 本地docker部署地址
   prod: '/prod-api' // 远程地址
 }
 let baseURL = import.meta.env.DEV ? envs[env] : import.meta.env.VITE_API_URL
-// console.log('🚀 ~ import.meta.env:', import.meta.env)
 /*  if(env === 'dev') {
      baseURL = 'http://localhost:3003';
  } else if (env === 'test') {
@@ -43,7 +42,6 @@ service.interceptors.response.use(
     if (res.data.code == 666) {
       return res.data
     } else if (res.data.code == 10000) {
-      // console.log(res.data.msg);
       return res.data
     } else {
       return res.data
@@ -52,7 +50,6 @@ service.interceptors.response.use(
   error => {
     console.error('网络异常,请稍后再试')
     if (error.response.status === 401 && location.pathname !== '/login') {
-      // console.log(error.response.data.msg);
       location.href = '/login'
       sessionStorage.setItem('token', '')
       commonStore().setToken('')

@@ -6,7 +6,7 @@
         <el-input v-model="formData.title" clearable></el-input>
       </el-form-item>
       <el-form-item label="状态">
-        <el-select v-model="formData.status" placeholder="请选择" clearable>
+        <el-select v-model="formData.status" placeholder="请选择" clearable style="width: 90px">
           <el-option label="全部" :value="''"></el-option>
           <el-option label="未完成" :value="0"></el-option>
           <el-option label="已完成" :value="1"></el-option>
@@ -26,11 +26,11 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="200">
         <template #header>
-          <el-button type="text" size="small" @click="handleAdd">添加</el-button>
+          <el-button type="primary" size="small" @click="handleAdd">添加</el-button>
         </template>
         <template #default="{ row }">
-          <el-button type="text" size="small" @click="handleEdit(row)">编辑</el-button>
-          <el-button type="text" size="small" @click="handleDelete(row)">删除</el-button>
+          <el-button type="primary" size="small" @click="handleEdit(row)">编辑</el-button>
+          <el-button type="danger" size="small" @click="handleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

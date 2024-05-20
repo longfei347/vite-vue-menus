@@ -10,6 +10,7 @@ export const commonStore = defineStore({
       tabs: [],
       menu: [],
       currentTab: '',
+      theme: '',
       token: ''
     }
   },
@@ -37,6 +38,9 @@ export const commonStore = defineStore({
     },
     setToken(token) {
       this.token = token
+    },
+    setTheme(theme) {
+      this.theme = theme
     }
   }
 })

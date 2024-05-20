@@ -9,11 +9,11 @@
       <!-- 根据实际情况添加更多列 -->
       <el-table-column fixed="right" label="操作" width="200">
         <template #header>
-          <el-button type="text" size="small" @click="handleAdd">添加</el-button>
+          <el-button type="primary" size="small" @click="handleAdd">添加</el-button>
         </template>
         <template #default="{ row }">
-          <el-button type="text" size="small" @click="handleEdit(row)">编辑</el-button>
-          <el-button type="text" size="small" @click="handleDelete(row)">删除</el-button>
+          <el-button type="primary" size="small" @click="handleEdit(row)">编辑</el-button>
+          <el-button type="danger" size="small" @click="handleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -124,9 +124,7 @@ export default {
     // 处理添加或编辑
     const handleSubmit = async () => {
       try {
-        // const url = currentItem.id ? `/user/${currentItem.id}` : '/user'
         const method = currentItem.id ? 'PUT' : 'POST'
-        console.log('🚀 ~ handleSubmit ~ currentItem:', currentItem)
         let res = await request({
           url: '/user',
           method,
