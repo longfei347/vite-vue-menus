@@ -2,10 +2,10 @@
   <div class="login-body">
     <div class="login-container">
       <div class="head">
-        <img class="logo" src="https://s.weituibao.com/1582958061265/mlogo.png" />
+        <img class="logo" :src="logo" />
         <div class="name">
-          <div class="title">KILO</div>
-          <div class="tips">kilo安全管理平台</div>
+          <div class="title">安全管理平台</div>
+          <div class="tips"></div>
         </div>
       </div>
       <el-form label-position="top" :rules="rules" :model="ruleForm" ref="loginForm" class="login-form">
@@ -16,16 +16,16 @@
           <el-input type="password" v-model.trim="ruleForm.password" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item prop="code">
-          <el-input v-model="ruleForm.code" auto-complete="off" placeholder="请输入图片验证码" style="width: 65%"> </el-input>
+          <el-input v-model="ruleForm.code" auto-complete="off" placeholder="请输入图片验证码" style="width: 50%"> </el-input>
           <div class="login-code">
-            <img :src="codeUrl" @click="getCode" class="login-code-img" />
+            <img :src="codeUrl" @click="getCode" />
           </div>
         </el-form-item>
         <el-form-item>
-          <div style="color: #333">登录表示您已同意<a>《服务条款》</a></div>
-          <el-button style="width: 100%" type="primary" @click="submitForm">立即{{ type === 'login' ? '登录' : '注册' }}</el-button>
-          <!-- <el-button plain @click="resetForm">重置</el-button> -->
-          <el-button plain type="text" @click="type = type === 'login' ? 'register' : 'login'">{{ type === 'login' ? '注册' : '登录' }}</el-button>
+          <el-button style="width: 100%" type="primary" @click="submitForm">立即{{ type === 'login' ? '登录' : '注册'
+            }}</el-button>
+          <!-- <el-button plain type="text" @click="type = type === 'login' ? 'register' : 'login'">{{ type === 'login' ? '注册' : '登录' }}</el-button> -->
+          <router-link to="/login" class="login-link">本地登陆</router-link>
         </el-form-item>
       </el-form>
     </div>
@@ -40,6 +40,7 @@ import { commonStore } from '@/store'
 import { ElMessage } from 'element-plus'
 import { router } from '@/router'
 import JSEncrypt from './jsencrypt.min'
+import logo from '@/assets/logo.png'
 export default {
   name: 'Login2',
   setup() {
@@ -66,6 +67,8 @@ export default {
       }
     })
     let uuid = ''
+    commonStore().setEnv('prod')
+    // axios.defaults.baseURL = '/prod-api'
     const submitForm = async () => {
       let aa = {}
       JSEncrypt(aa)
@@ -122,6 +125,7 @@ export default {
     }
     let codeUrl = ref('')
     return {
+      logo,
       ...toRefs(state),
       codeUrl,
       getCode() {
@@ -146,52 +150,53 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .login-body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  background-color: #fff;
-  /* background-image: linear-gradient(25deg, #077f7c, #3aa693, #5ecfaa, #7ffac2); */
+  height: 100%;
 }
 .login-container {
   width: 420px;
-  height: 500px;
   background-color: #fff;
   border-radius: 4px;
   box-shadow: 0px 21px 41px 0px rgba(0, 0, 0, 0.2);
-}
-.head {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 0 20px 0;
-}
-.head img {
-  width: 100px;
-  height: 100px;
-  margin-right: 20px;
-}
-.head .title {
-  font-size: 28px;
-  color: #1baeae;
-  font-weight: bold;
-}
-.head .tips {
-  font-size: 12px;
-  color: #999;
-}
-.login-form {
-  width: 70%;
-  margin: 0 auto;
-}
-</style>
-<style>
-.el-form--label-top .el-form-item__label {
-  padding: 0;
-}
-.login-form .el-form-item {
-  margin-bottom: 12px;
+  .head {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 0 20px 0;
+  }
+  .head img {
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+  }
+  .head .title {
+    font-size: 28px;
+    color: #1baeae;
+    font-weight: bold;
+  }
+  .head .tips {
+    font-size: 12px;
+    color: #999;
+  }
+  .login-form {
+    width: 70%;
+    margin: 0 auto;
+    padding-bottom: 20px;
+  }
+  .login-link {
+    margin-left: 12px;
+    color: #409eff;
+    text-decoration: none;
+  }
+  .login-code {
+    width: 50%;
+    img {
+      width: 90%;
+    }
+  }
 }
 </style>

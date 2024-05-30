@@ -3,7 +3,8 @@
     <main class="main" :class="theme" v-if="token">
       <side :theme="theme" />
       <el-container>
-        <el-tabs type="card" @tab-remove="removeTab" @tab-click="clickTab" v-model="currentTabs" closable style="width: 100%">
+        <el-tabs type="card" @tab-remove="removeTab" @tab-click="clickTab" v-model="currentTabs" closable
+          style="width: 100%">
           <el-tab-pane v-for="itm in tabs" :key="itm" :name="itm.path" :label="itm.label" :path="itm.path">
             <component :is="itm.name" :path="itm.path" @openTab="openTab"></component>
             <!-- <p>{{ itm.name }}</p> -->
@@ -14,7 +15,9 @@
         <el-dropdown>
           <span class="el-dropdown-link">
             <!-- <el-avatar :size="40" :src="avatar" /> -->
-            <el-icon :size="16"><UserFilled /></el-icon>
+            <el-icon :size="16">
+              <UserFilled />
+            </el-icon>
             <span>{{ username }}</span>
           </span>
           <template #dropdown>
@@ -29,6 +32,13 @@
                   <el-radio label="info">灰色</el-radio>
                   <el-radio label="purple">紫色</el-radio>
                   <el-radio label="">默认</el-radio>
+                </el-radio-group>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <span title="请退出登录后重新登陆">切换环境</span>
+                <el-radio-group v-model="env" style="margin-left: 8px;">
+                  <el-radio label="local" disabled>本地</el-radio>
+                  <el-radio label="prod" disabled>远程</el-radio>
                 </el-radio-group>
               </el-dropdown-item>
               <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
@@ -46,6 +56,7 @@ import { commonStore } from './store'
 import side from '@/components/side.vue'
 import { UserFilled } from '@element-plus/icons-vue'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
+import axios from '@/utils/axios'
 export default {
   name: 'app',
   components: {
@@ -58,12 +69,15 @@ export default {
       store,
       zh: zhCn,
       theme: store.theme,
+      env: store.env,
       username: store.getUsername
     }
   },
   mounted() {
     window._a = this
+    this.$http = axios
     // this.theme = this.store.theme
+    // axios.defaults.baseURL = this.store.env === 'local' ? '/api/' : '/api-prod/'
   },
   methods: {
     removeTab(val) {
@@ -105,7 +119,10 @@ export default {
     },
     theme(n) {
       this.store.setTheme(n)
-    }
+    },
+    env(n) {
+      this.store.setEnv(n)
+    },
   },
   provide() {
     return {
@@ -170,15 +187,15 @@ body {
     background-color: var(--el-color-danger-light-8);
   }
   &.info {
-    background-color: var(--el-color-info-light-8);
+    background-color: var(--el-color-info-light-9);
   }
   &.purple {
     background-color: #f2d6f2;
   }
-  > .el-container {
+  >.el-container {
     height: 100%;
     padding: 10px;
-    > .el-tabs {
+    >.el-tabs {
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -224,6 +241,7 @@ body {
   margin-top: 10px;
 }
 .themes {
+  margin-left: 8px;
   width: 150px;
   .el-radio {
     margin-right: 0;
@@ -240,7 +258,7 @@ body {
       background-color: var(--el-color-danger-light-3);
     }
     &:nth-child(5) {
-      background-color: var(--el-color-info-light-3);
+      background-color: var(--el-color-info);
     }
     &:nth-child(6) {
       background-color: purple;

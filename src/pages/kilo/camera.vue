@@ -26,12 +26,6 @@
           <el-option :value="3" label="半球"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="是否多通道" prop="channelType">
-        <el-select v-model="form.channelType" class="w80" placeholder="是否多通道" clearable>
-          <el-option :value="1" label="是"></el-option>
-          <el-option :value="0" label="否"></el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item label="是否鸿蒙" prop="isHarmony">
         <el-select v-model="form.isHarmony" class="w80" placeholder="是否鸿蒙" clearable>
           <el-option :value="1" label="是"></el-option>
@@ -43,6 +37,12 @@
       </el-form-item>
       <el-form-item label="厂商" prop="manufacturer">
         <el-input v-model="form.manufacturer"></el-input>
+      </el-form-item>
+      <el-form-item label="视频主站" prop="stationIp">
+        <el-input v-model="form.stationIp"></el-input>
+      </el-form-item>
+      <el-form-item label="鸿蒙平台ip" prop="harmonyPlatformIp">
+        <el-input v-model="form.harmonyPlatformIp"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="handleSearch">查询</el-button>
@@ -56,7 +56,8 @@
     </el-form>
     <!-- 上面对象为列表数据，下面对象为表单数据 -->
     <el-table :data="listData" style="width: 100%" border>
-      <el-table-column v-for="col in columns" :key="col.key" :prop="col.key" :label="col.title" :width="col.width" :fixed="col.fixed" show-overflow-tooltip="true">
+      <el-table-column v-for="col in columns" :key="col.key" :prop="col.key" :label="col.title" :width="col.width"
+        :fixed="col.fixed" show-overflow-tooltip="true">
         <template #default="{ row, column }">
           <template v-if="currentEditableRow === row.id">
             <template v-if="col.isSelect">
@@ -76,24 +77,20 @@
           <el-button type="primary" plain size="small" @click="handleAdd">添加</el-button>
         </template>
         <template #default="{ row }">
-          <el-button type="primary" plain size="small" v-if="currentEditableRow !== row.id" @click="handleEdit(row)">编辑</el-button>
-          <el-button type="info" plain size="small" v-if="currentEditableRow === row.id && actionType" @click="handleCanncel(row)">取消</el-button>
-          <el-button type="primary" plain size="small" v-if="currentEditableRow === row.id && actionType" @click="handleSubmit(row)">保存</el-button>
+          <el-button type="primary" plain size="small" v-if="currentEditableRow !== row.id"
+            @click="handleEdit(row)">编辑</el-button>
+          <el-button type="info" plain size="small" v-if="currentEditableRow === row.id && actionType"
+            @click="handleCanncel(row)">取消</el-button>
+          <el-button type="primary" plain size="small" v-if="currentEditableRow === row.id && actionType"
+            @click="handleSubmit(row)">保存</el-button>
           <el-button type="danger" plain size="small" @click="handleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <!-- 分页组件 -->
-    <el-pagination
-      @current-change="handlePageChange"
-      @size-change="handleSizeChange"
-      :current-page="page.current"
-      :page-sizes="page.pageSizes"
-      :page-size="page.pageSize"
-      layout="total, sizes, prev, pager, next"
-      :total="page.total"
-      locale="zh-cn"
-    >
+    <el-pagination @current-change="handlePageChange" @size-change="handleSizeChange" :current-page="page.current"
+      :page-sizes="page.pageSizes" :page-size="page.pageSize" layout="total, sizes, prev, pager, next"
+      :total="page.total" locale="zh-cn">
     </el-pagination>
   </div>
 </template>
@@ -125,9 +122,10 @@ export default {
       cameraIp: '',
       cameraMac: '',
       cameraType: '',
-      channelType: '',
       snNum: '',
-      manufacturer: ''
+      manufacturer: '',
+      stationIp: '',
+      harmonyPlatformIp: ''
     })
     // 查询
     const handleSearch = () => {
@@ -221,6 +219,7 @@ export default {
           return value !== ''
         })
       )
+
       const res = await request.get(`/kilo/camera/list`, {
         params: {
           pageNum: exports ? 1 : page.current,

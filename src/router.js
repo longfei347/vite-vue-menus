@@ -1,8 +1,7 @@
-import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 // 自动路由配置
 let routes = []
 const modules = import.meta.glob('./pages/**/*.vue', { eager: true, import: 'default' })
-// console.log('🚀 ~ modules:', modules, Object.entries(modules))
 
 // const modules = import.meta.glob('./pages/**/*.vue');
 // 循环进入路由

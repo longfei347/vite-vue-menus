@@ -11,7 +11,8 @@ export const commonStore = defineStore({
       menu: [],
       currentTab: '',
       theme: '',
-      token: ''
+      token: '',
+      env: 'local'
     }
   },
   // computed修饰一些值
@@ -41,6 +42,9 @@ export const commonStore = defineStore({
     },
     setTheme(theme) {
       this.theme = theme
+    },
+    setEnv(env) {
+      this.env = env
     }
   }
 })

@@ -4,29 +4,21 @@
   <router-link :to="{ name: 'user' }">用户管理</router-link>
   <el-button @click="toNews">摄像头列表</el-button>
   <router-link to="/todo">待办列表</router-link>
-  <div class="detail">
-    <p>{{ content }}</p>
-  </div>
 </template>
 <script>
-import { computed } from 'vue'
 export default {
   name: 'home',
   label: '主页',
   icon: 'HomeFilled',
   data() {
     return {
-      name: '',
-      content: ''
+      name: ''
     }
   },
   inject: ['openTab'],
   mounted() {
-    window._h = this
     const my = this.$commonStore()
-    // // const name = computed(() => my.name)
     this.name = my.getUsername
-    // this.$http.get('/user').then(r => (this.detail = r.data))
   },
   methods: {
     toNews() {
@@ -44,11 +36,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-.b {
-  font-weight: bold;
-}
-.detail {
-  text-align: left;
-}
-</style>

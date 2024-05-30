@@ -35,15 +35,9 @@
       </el-table-column>
     </el-table>
     <!-- 分页组件 -->
-    <el-pagination
-      @current-change="handlePageChange"
-      @size-change="handleSizeChange"
-      :current-page="page.current"
-      :page-sizes="page.pageSizes"
-      :page-size="page.pageSize"
-      layout="total, sizes, prev, pager, next"
-      :total="page.total"
-    >
+    <el-pagination @current-change="handlePageChange" @size-change="handleSizeChange" :current-page="page.current"
+      :page-sizes="page.pageSizes" :page-size="page.pageSize" layout="total, sizes, prev, pager, next"
+      :total="page.total">
     </el-pagination>
 
     <!-- 模态框（用于添加或编辑） -->

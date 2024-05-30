@@ -60,16 +60,14 @@ export default ({ mode }) => {
     },
     server: {
       proxy: {
-        '^/api': {
-          // target: 'https://console-api.apipost.cn/',
-          // target: 'http://120.78.164.36:10009/',
+        '^/api/': {
           target: env.VITE_API_URL,
           changeOrigin: true,
           rewrite: path => path.replace(/^\/api/, '')
         },
-        '^/prod-api': {
-          target: 'http://120.78.164.36:10009/',
-          // target: env.VITE_API_URL,
+        '^/prod-api/': {
+          target: 'https://120.78.164.36:10009/',
+          secure: false,
           changeOrigin: true
         }
       }

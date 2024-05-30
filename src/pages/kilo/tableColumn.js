@@ -22,16 +22,7 @@ export const columns = [
   { title: '网关设备端口', key: 'gatewayDevPort', width: 100 },
   { title: '激活密码', key: 'activatePwd', width: 100 },
   { title: '设备版本号', key: 'devVersion', width: 95 },
-  {
-    title: '是否多通道',
-    key: 'channelType',
-    isSelect: true,
-    options: [
-      { value: 0, label: '否' },
-      { value: 1, label: '是' }
-    ],
-    width: 100
-  },
+  { title: '通道数', key: 'channelType', width: 100 },
   { title: 'NVR-IP', key: 'nvrIp', width: 110 },
   { title: 'NVR回调地址', key: 'nvrUrl', width: 120 },
   { title: '操作系统', key: 'harmonyAuth', width: 110 },
